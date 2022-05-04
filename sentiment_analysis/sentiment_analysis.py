@@ -79,8 +79,7 @@ def sentimentAnalysis():
 
 
 def evaluationSentiment():
-    # TODO
-    # accuracy.
+    # select actual and bader results from mysql
     actual = mysql.selectActuralSentiment()
     vader_sentiment = mysql.selectResultsSentiment()
     print('actual:', actual)
@@ -89,7 +88,7 @@ def evaluationSentiment():
 
     # confusion matrix
     confusion_m = confusion_matrix(actual, vader_sentiment)  # 横为true 竖为predict
-    print('confusion_m: ', confusion_m)
+    print('confusion_m: \n', confusion_m)
 
     # accuracy
     accuracy = accuracy_score(actual, vader_sentiment)
