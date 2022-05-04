@@ -29,6 +29,8 @@ def SelectVideoID():
             videoIds.append(item)
     # print(videoIds)
     return videoIds
+
+
 # 选择 transcripts没有的video_id
 def SelectVideoIDforThanscripts():
     # print('try to select video id for transcripts')
@@ -98,12 +100,13 @@ def insertVideoswithoutComments(videoId):
 
 
 # 收集comments
-def InsertComments(videoid,comment):
+def InsertComments(videoid, comment):
     # 执行sql语句
     query = 'insert into comments(`video_id`,`comment`) values(%s, %s)'
-    param = (videoid,comment)
+    param = (videoid, comment)
     cur.execute(query, param)
     con.commit()
+
 
 # For Data Selection
 # 选择videos的tags并进行第一次粗浅的topic modelling：
@@ -126,6 +129,7 @@ def insertNewTags(videoId, newTags):
     cur.execute(query, param)
     con.commit()
 
+
 # For word clean:
 
 def selectTranscripts(videoId):
@@ -143,19 +147,21 @@ def selectTranscripts(videoId):
         for item in items:
             videosContents.append(item)
         # print(item)
-    transcript=','.join(videosContents)
+    transcript = ','.join(videosContents)
     # print(transcript)
     return transcript
 
 
 # # insert cleaned comments：
-def updateCleanedCommentsToComments(videoId, id,comment):
+def updateCleanedCommentsToComments(videoId, id, comment):
     # 执行sql语句
     # print(videoId,id,comment)
     query = 'update comments set `comment` = %s where video_id= %s and id=%s'
-    param = (comment, videoId,id)
+    param = (comment, videoId, id)
     cur.execute(query, param)
     con.commit()
+
+
 # insert cleaned transcripts
 def updateCleanedTranscripts(videoID, transcript):
     query = 'update videos set `transcript` = %s where video_id= %s'
@@ -163,6 +169,7 @@ def updateCleanedTranscripts(videoID, transcript):
     cur.execute(query, param)
     con.commit()
     return None
+
 
 # For word cut:
 # 选择videos中的全部内容：
@@ -179,8 +186,9 @@ def SelectVideos(videoId):
         for item in items:
             videosContents.append(item)
     # print(videosContents)
-    videosContent='.'.join(videosContents)
+    videosContent = '.'.join(videosContents)
     return videosContent
+
 
 # 将videos的分词结果保存在new_transcript中
 def insertNewTranscript(videoId, transcript_new, original_word, new_word):
@@ -197,20 +205,22 @@ def insertNewTranscript(videoId, transcript_new, original_word, new_word):
     cur.execute(query, param)
     con.commit()
 
+
 # 将comments的分词结果保存在new_comment中
-def insertNewComments(videoId,id, new_comment, original_word, new_word):
+def insertNewComments(videoId, id, new_comment, original_word, new_word):
     query = 'update comments set new_comment= %s where video_id = %s and id=%s'
-    param = (new_comment, videoId,id)
+    param = (new_comment, videoId, id)
     cur.execute(query, param)
     con.commit()
     query = 'update comments set original_word= %s where video_id = %s and id=%s '
-    param = (original_word, videoId,id)
+    param = (original_word, videoId, id)
     cur.execute(query, param)
     con.commit()
     query = 'update comments set new_word= %s where video_id = %s and id=%s'
-    param = (new_word, videoId,id)
+    param = (new_word, videoId, id)
     cur.execute(query, param)
     con.commit()
+
 
 # select word token from videos
 def selectWordToken():
@@ -222,13 +232,14 @@ def selectWordToken():
     for items in result:
         for item in items:
             results.append(item)
-    query ='select `new_comment` from comments'
+    query = 'select `new_comment` from comments'
     cur.execute(query)
     result = cur.fetchall()
     for items in result:
         for item in items:
             results.append(item)
     return results
+
 
 def SelectCommentswithID(video_id):
     query = 'SELECT `comment` from comments where video_id =%s'
@@ -256,13 +267,15 @@ def SelectCommentswithID(video_id):
     for items in ids_all:
         for id in items:
             id_list.append(id)
-    return comments,id_list
+    return comments, id_list
 
-def insertTopicComment(id, video_id,topic):
+
+def insertTopicComment(id, video_id, topic):
     query = 'update commets set topic= %s where id = %s and video_id=%s'
-    param = (topic, id,video_id)
+    param = (topic, id, video_id)
     cur.execute(query, param)
     con.commit()
+
 
 # For sentiment analysis：
 
@@ -291,10 +304,10 @@ def SelectAllComments():
     for items in ids_all:
         for id in items:
             id_list.append(id)
-    return comments,id_list
+    return comments, id_list
 
 
-def InsertCommentsSAResult( id,neg, neu,pos,compound,sentiment):
+def InsertCommentsSAResult(id, neg, neu, pos, compound, sentiment):
     query = 'update comments set neg= %s where  id=%s '
     param = (neg, id)
     cur.execute(query, param)
@@ -320,6 +333,7 @@ def InsertCommentsSAResult( id,neg, neu,pos,compound,sentiment):
     cur.execute(query, param)
     con.commit()
 
+
 def selectActuralSentiment():
     query = 'SELECT `polarity` from comments where polarity is not null'
     cur.execute(query)
@@ -328,7 +342,7 @@ def selectActuralSentiment():
     # print(transcripts)
     con.commit()
     # 打印数据
-    actural=[]
+    actural = []
 
     # videosContents = ''
     for items in sentiments:
@@ -336,6 +350,7 @@ def selectActuralSentiment():
             actural.append(item)
         # print(item)
     return actural
+
 
 def selectResultsSentiment():
     query = 'SELECT `sentiment` from comments where polarity is not null'
@@ -345,7 +360,7 @@ def selectResultsSentiment():
     # print(transcripts)
     con.commit()
     # 打印数据
-    vader_sentiment=[]
+    vader_sentiment = []
 
     # videosContents = ''
     for items in sentiments:
@@ -362,8 +377,6 @@ def CloseAll():
     con.close()
 
 
-
-
 # 要删的
 def InsertCommentsTestSA(id, polarity, subjectivity):
     query = 'update comments set polarity= %s where id=%s'
@@ -374,4 +387,3 @@ def InsertCommentsTestSA(id, polarity, subjectivity):
     param = (subjectivity, id)
     cur.execute(query, param)
     con.commit()
-

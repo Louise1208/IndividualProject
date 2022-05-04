@@ -85,6 +85,7 @@ def evaluationSentiment():
     vader_sentiment = mysql.selectResultsSentiment()
     print('actual:', actual)
     print('vader_sentiment:', vader_sentiment)
+    print(classification_report(actual, vader_sentiment))
 
     # confusion matrix
     confusion_m = confusion_matrix(actual, vader_sentiment)  # 横为true 竖为predict
@@ -112,7 +113,6 @@ def evaluationSentiment():
     F1_weighted = f1_score(actual, vader_sentiment, average='weighted')
     print('F1_micro: ', F1_micro, '\nF1_macro:', F1_macro, '\nF1_weighted: ', F1_weighted)
 
-    print(classification_report(actual, vader_sentiment))
     path = 'evaluation of sentiment analysis.txt'
     with open(path, 'a', encoding='utf-8') as file:
         file.write('confusion_matrix:')
