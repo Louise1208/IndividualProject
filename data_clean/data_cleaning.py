@@ -1,5 +1,5 @@
 import re
-import tools.mySQL as mysql
+import util.mysql as mysql
 
 
 # 清除description中的不必要的数据（URL/email/Twitter/Instagram/Facebook/Snapchat）
@@ -29,16 +29,15 @@ def cleanChannelName(strToClean):
     return strToClean
 
 
-
 # 替换连续的符号\空格、换行
 def cleanSymbols(strToClean):
     # 替换连续的空格
     strToClean = re.sub(' +', ' ', strToClean)
     strToClean = re.sub(r'\n+', ' ', strToClean)
 
-
     # print(len(strToClean),strToClean)
     return strToClean
+
 
 # clean comments of each video. save them into original palce
 def dataCleaning():
@@ -55,20 +54,14 @@ def dataCleaning():
     print('the number we need to clean: ', len(videoIds))
     for videoID in videoIds:
         # print(videoIds.index(videoID))
-        comments,id_list = mysql.SelectCommentswithID(videoID)
+        comments, id_list = mysql.SelectCommentswithID(videoID)
         for comment in comments:
-            index=comments.index(comment)
-            id=id_list[index]
+            index = comments.index(comment)
+            id = id_list[index]
             print(id)
             # print(comments)
             comment = cleanURL(comment)
             comment = cleanChannelName(comment)
             comment = cleanSymbols(comment)
-            mysql.updateCleanedCommentsToComments(videoID,id, comment)
+            mysql.updateCleanedCommentsToComments(videoID, id, comment)
     print(' All Comments Cleaned!')
-
-
-
-
-
-

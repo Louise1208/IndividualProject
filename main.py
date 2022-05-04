@@ -10,7 +10,7 @@ from data_clean import data_cleaning as dcl
 from data_clean import data_classification as dc
 from topic_modelling import find_best_parameters_lda as lda
 from topic_modelling import optimist_LDA_model as bestLda
-from tools import mySQL as mysql
+from util import mysql as mysql
 from sentiment_analysis import sentiment_analysis as sa
 import matplotlib.pyplot as plt
 

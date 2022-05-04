@@ -1,7 +1,7 @@
 import random
 
 from youtube_transcript_api import YouTubeTranscriptApi
-from tools import mySQL
+from util import mysql
 import json
 
 
@@ -20,7 +20,7 @@ def GetTranscription(videoIds):
                 # print(text)
                 transcripts = transcripts + text + ' '
             if len(transcripts) > 5:
-                mySQL.InsertTranscriptInf(videoId, transcripts)
+                mysql.InsertTranscriptInf(videoId, transcripts)
                 # print(transcripts)
                 # transcription[index]=transcription
             temp = temp +1
@@ -34,7 +34,7 @@ def GetTranscription(videoIds):
 
 # transcript 收集
 def TranscriptionCollection():
-    videoIds = mySQL.SelectVideoIDforThanscripts()
+    videoIds = mysql.SelectVideoIDforThanscripts()
     random.shuffle(videoIds)
     print(len(videoIds))
     falls = GetTranscription(videoIds)

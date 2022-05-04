@@ -2,13 +2,14 @@
 # 查看docs里包含了哪些文档
 import matplotlib.pyplot as plt
 
-import tools.mySQL as mysql
+import util.mysql as mysql
 
 from time import time
 from gensim import corpora, models
 
+
 def buildCorpus():
-    t0=time()
+    t0 = time()
     results = mysql.selectWordToken()
     print('Get data samples :', len(results))
     # 创建语料的词语词典，每个单独的词语都会被赋予一个索引
@@ -19,45 +20,49 @@ def buildCorpus():
     # 使用上面的词典，将转换文档列表（语料）变成 DT 矩阵(corpus)
     doc_term_matrix = [dictionary.doc2bow(doc) for doc in data_sample]
     print("Get corpus，cost time:  %0.3f s." % (time() - t0))
-    return doc_term_matrix,dictionary,data_sample
+    return doc_term_matrix, dictionary, data_sample
+
 
 def bestLDAmodel():
-    model=models.LdaModel
+    model = models.LdaModel
     # TODO: fname best situation?
-    lda=model.load('.model')
+    lda = model.load('.model')
     return lda
+
 
 # Show topics
 def topics():
-    lda=bestLDAmodel()
+    lda = bestLDAmodel()
     topics = lda.print_topics(num_words=20)
-        # 输出结果
+    # 输出结果
     for topic in topics:
         print(topic)
+
 
 # find the Topics of docs and the details of docs
 def findDocsTopics():
     # todo
-    lda=bestLDAmodel()
-    videoIds=mysql.SelectVideoID()
+    lda = bestLDAmodel()
+    videoIds = mysql.SelectVideoID()
     for videoId in videoIds:
-        comments,id_list=mysql.SelectCommentswithID(videoId)
+        comments, id_list = mysql.SelectCommentswithID(videoId)
         docs = [doc.split() for doc in comments]
         dictionary = lda.id2word.doc2bow(docs)
         document_topics, word_topic, word_phi = lda.get_document_topics(dictionary, per_word_topics=True)
-        if len(document_topics)==len(comments):
-            if len(document_topics)==len(id_list):
+        if len(document_topics) == len(comments):
+            if len(document_topics) == len(id_list):
                 print('correct!!!!!!!!!!!!!!!!!!!!!!!!!')
-        print('comment:',comments[0],'\ndocument topics:',document_topics[0],'\nword topics:',word_topic[0],'\nword phi:',word_phi[0])
+        print('comment:', comments[0], '\ndocument topics:', document_topics[0], '\nword topics:', word_topic[0],
+              '\nword phi:', word_phi[0])
         print(document_topics)
         for doc_topic in document_topics:
-            index=document_topics.index[doc_topic]
-            id=id_list[index]
+            index = document_topics.index[doc_topic]
+            id = id_list[index]
             print(id)
             print(comments[index])
             print('document topic:', doc_topic)
             print(doc_topic[0])
-            topic=doc_topic[0][0]
+            topic = doc_topic[0][0]
             print(topic)
             print('-------------- \n')
             # mysql.insertTopicComment(id,videoId,topic)

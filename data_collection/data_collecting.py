@@ -1,6 +1,6 @@
 import random
-from data_collection import comments_collection as CD, transcription__collection
-from tools import mySQL
+from data_collection import comments_collection as CD, transcription_collection
+from util import mysql
 
 
 # import sys
@@ -14,8 +14,8 @@ def dataCollecting():
 
     # Collect comments：
     # for 3 p.m. /day
-    videoIds = mySQL.SelectVideoIDforComments()
-    print( ' number of videos need to be collected: ', len(videoIds))
+    videoIds = mysql.SelectVideoIDforComments()
+    print(' number of videos need to be collected: ', len(videoIds))
     CD.CommentsCollection(videoIds)
 
-    mySQL.CloseAll()
+    mysql.CloseAll()
