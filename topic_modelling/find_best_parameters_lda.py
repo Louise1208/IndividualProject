@@ -1,10 +1,10 @@
 from time import time
 import matplotlib.pyplot as plt
-import pyLDAvis
+# import pyLDAvis
 
 import util.mysql as mysql
 from gensim import corpora, models
-import pyLDAvis.gensim as ldaVis
+# import pyLDAvis.gensim as ldaVis
 
 
 def buildCorpus():
@@ -27,11 +27,11 @@ def buildCorpus():
 def findBestParameters():
     corpus, dictionary, data_sample = buildCorpus()
     # passes=10
-    chunksizes = [256, 512, 1024, 2048, 4096, 8192]  #
-    passes_value = [10, 20, 30]
+    chunksizes = [256, 512, 1024, 2048, 4096, 8192]
+    passes_value = [10, 20]
     max_topics = 15
     time_start = time()
-    path = 'parameters results.txt'
+    path = 'output files/txt files/parameters results.txt'
     for passes in passes_value:
         for chunksize in chunksizes:
             print('passes=', passes, ' chunksize=', chunksize)
@@ -92,12 +92,9 @@ def findBestParameters():
 # Make LDAvis
 def LDAvis():
     doc_bow, dictionary, data_sample = buildCorpus()
-    # TODO: path list!
-    pathes = ['p10_c512_lda_model_numT5.{}', 'p10_c512_lda_model_numT6.{}', 'p10_c1024_lda_model_numT5.{}',
-              'p20_c512_lda_model_numT6.{}', 'p20_c1024_lda_model_numT5.{}', 'p30_c1024_lda_model_numT5.{}',
-              'p30_c512_lda_model_numT6.{}', 'p20_c1024_lda_model_numT6.{}']
+    pathes = [ 'p10_c1024_lda_model_numT5.{}','p20_c1024_lda_model_numT5.{}']
     for path in pathes:
         lda = models.LdaModel.load(path.format('model'))
         print('model load!')
-        visulisation = ldaVis.prepare(lda, doc_bow, dictionary)
-        pyLDAvis.save_html(visulisation, path.format('html'))
+        # visulisation = ldaVis.prepare(lda, doc_bow, dictionary)
+        # pyLDAvis.save_html(visulisation, path.format('html'))

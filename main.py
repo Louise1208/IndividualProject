@@ -1,3 +1,4 @@
+import re
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -11,7 +12,7 @@ from data_clean import data_classification as dc
 from topic_modelling import find_best_parameters_lda as lda
 from topic_modelling import optimist_LDA_model as bestLda
 from util import mysql as mysql
-from sentiment_analysis import sentiment_analysis as sa
+from sentiment_analysis import sentiment_analysing as sa
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
@@ -20,8 +21,10 @@ if __name__ == '__main__':
 
     # Do data Collection
     # dcol.dataCollecting()
+
     # Do data_calssification
     # dc.dataClassificationWithTags()
+
     # Clean data:
     # dcl.dataCleaning()
 
@@ -30,15 +33,14 @@ if __name__ == '__main__':
     # dp.dataPreprocessing(2)
 
     #Topic Modelling
-    # lda.findBestParameters()
+    lda.findBestParameters()
     # lda.LDAvis()
-    # Todo!!
-    bestLda.topics()
-    bestLda.findDocsTopics()
-
+    # bestLda.topics()
+    # bestLda.findDocsTopics()
 
     # Sentiment Analysis
-    # sa.sentimentAnalysis()
+    sa.sentimentAnalysis('videos')
+    sa.sentimentAnalysis('comments')
     sa.evaluationSentiment()
 
 

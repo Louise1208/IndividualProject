@@ -11,16 +11,31 @@ from sklearn.metrics import precision_score, recall_score, f1_score
 from sklearn.metrics import classification_report
 
 
-def sentimentAnalysis():
-    comments, id_list = mysql.SelectAllComments()
+def sentimentAnalysis(tag):
+
     analyzer = SentimentIntensityAnalyzer()
     temp = 0
     num_sentence = 0
-    for comment in comments:
-        index = comments.index(comment)
+    id_list=[]
+    contents=[]
+    if tag=='comments':
+        print(tag,': start to analyse...')
+        contents, id_list = mysql.SelectAllComments()
+        analyzer = SentimentIntensityAnalyzer()
+
+
+    if tag=='videos':
+        print(tag,': start to analyse...')
+        id_list=mysql.SelectVideoID()
+        for videoId in id_list:
+            content=mysql.SelectVideos(videoId)
+            contents.append(content)
+
+    for item in contents:
+        index = contents.index(item)
         id = id_list[index]
-        result = analyzer.polarity_scores(comment)
-        sentence_c = sent_tokenize(comment)
+        result = analyzer.polarity_scores(item)
+        sentence_c = sent_tokenize(item)
         num_sentence = num_sentence + len(sentence_c)
         # print(num_sentence)
         neg = str(result['neg'])
@@ -35,47 +50,18 @@ def sentimentAnalysis():
             sentiment = 0
         compound = str(compound)
         # print(compound)
-        mysql.InsertCommentsSAResult(id, neg, neu, pos, compound, sentiment)
-        print(temp, ' total commnets: 39374')
+        if tag=='comments':
+            mysql.InsertCommentsSAResult(id, neg, neu, pos, compound, sentiment)
+        if tag=='videos':
+            mysql.InsertTranscriptsSAResult(id, neg, neu, pos, compound, sentiment)
+        if temp%100==1:
+            print(temp, 'collect!')
         temp = temp + 1
     print('number of sentences:', num_sentence)
     print('all sentimnent collect!!!!!!!!!!')
     with open('number of sentences.txt', 'a', encoding='utf-8') as file:
         file.write('num_sentence=' + str(num_sentence))
 
-
-# 结束啦
-# def sentimentAnalysisTrain():
-#     comments,id_list = mysql.SelectAllComments()
-#     print(id_list)
-#     test_number=int(len(id_list)*0.2)
-#     id_test=random.sample(id_list, test_number)
-#     print(len(id_test))
-#     temp=0
-#     for id in id_test:
-#         index=id_list.index(id)
-#         comment=comments[index]
-#         comment = comment.lower()
-#         comment = TextBlob(comment)
-#         comment = str(comment.correct())
-#         comment_blob = TextBlob(comment)
-#         polarity = comment_blob.sentiment.polarity
-#         subjectivity = comment_blob.sentiment.subjectivity
-#         # print(polarity, subjectivity)
-#         if polarity>= 0.1:
-#                 polarity=1
-#         elif polarity <= -0.1:
-#             polarity=-1
-#         else:
-#             polarity=0
-#         if subjectivity ==0:
-#              subjectivity='obj'
-#              polarity=0
-#
-#
-#         mysql.InsertCommentsTestSA(id, polarity, subjectivity)
-#         print(temp,'total comments: 39374')
-#         temp=temp+1
 
 
 def evaluationSentiment():
@@ -112,7 +98,7 @@ def evaluationSentiment():
     F1_weighted = f1_score(actual, vader_sentiment, average='weighted')
     print('F1_micro: ', F1_micro, '\nF1_macro:', F1_macro, '\nF1_weighted: ', F1_weighted)
 
-    path = 'evaluation of sentiment analysis.txt'
+    path = 'output files/txt files/evaluation of sentiment analysis.txt'
     with open(path, 'a', encoding='utf-8') as file:
         file.write('confusion_matrix:')
         file.write(confusion_m)
