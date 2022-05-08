@@ -29,20 +29,18 @@ if __name__ == '__main__':
     # dcl.dataCleaning()
 
     # Do Data Pre-processing with nltk and find the best dataPreprocessing way:
-    # dp.dataPreprocessing(1)
-    # dp.dataPreprocessing(2)
+    # dp.dataPreprocessing()
 
     #Topic Modelling
-    lda.findBestParameters()
+    # lda.findBestParameters()
     # lda.LDAvis()
     # bestLda.topics()
-    # bestLda.findDocsTopics()
+    bestLda.findDocsTopics()
 
     # Sentiment Analysis
-    sa.sentimentAnalysis('videos')
-    sa.sentimentAnalysis('comments')
-    sa.evaluationSentiment()
-
+    # sa.sentimentAnalysis('videos')
+    # sa.sentimentAnalysis('comments')
+    # sa.evaluationSentiment()
 
 
 

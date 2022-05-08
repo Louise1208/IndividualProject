@@ -50,14 +50,3 @@ def dataClassificationWithTags():
             tagsF.append(items[0])
     print(tagsF)
 
-    # tagswithFrequency=[
-    #     ["funny", 1177],["fun", 203],
-    #     ["football", 1060], ["sports", 659],["sky sports", 470], ["soccer", 457], ["sky sports football", 354],  ["premier league", 585],["premier league highlights", 354],["football league", 327],["sky sports live", 304],  ["manchester united", 303],["nba", 265], ["man utd", 251],  ["sidemen", 246],["sport", 228], ["man united", 228],  ["epl highlights 1920", 205], ["mufc", 203],
-    #     ["minecraft", 820], ["minecraft challenge", 207],
-    #     ["music", 377], ["rap", 373], ["hip hop", 281],
-    #     ["comedy", 761],
-    #     ["challenge", 530],
-    #     ["highlights", 518],
-    #     ["vlog", 471],
-    #     ["news", 378],
-    #     ["family", 230],   ["family friendly", 218]]

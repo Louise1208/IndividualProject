@@ -49,10 +49,10 @@ def CommentExtract(videoId, count):
 
 
 def CommentsCollection(videoIds):
-    # 将你想要爬取视频评论的id放入其中
+    # videos cannot get
     falls = []
 
-    # count为每个地址想要爬取评论的数目
+    # count:the max number of comments for each video
     count = 500
     for videoId in videoIds:
         try:

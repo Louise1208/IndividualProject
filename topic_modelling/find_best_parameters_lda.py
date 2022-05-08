@@ -1,22 +1,31 @@
 from time import time
 import matplotlib.pyplot as plt
-# import pyLDAvis
+import pyLDAvis
 
 import util.mysql as mysql
 from gensim import corpora, models
-# import pyLDAvis.gensim as ldaVis
+import pyLDAvis.gensim as ldaVis
 
 
 def buildCorpus():
     t0 = time()
     results = mysql.selectWordToken()
     print('Get data samples :', len(results))
-    # 创建语料的词语词典，每个单独的词语都会被赋予一个索引
-    data_sample = [doc.split() for doc in results]
-    # print(data_sample[0])
+    docs_words = [doc.split() for doc in results]
+
+    # # build n-grams
+    # # build bigrams：
+    # bigram = models.Phrases(docs_words, min_count=5,threshold=50) # higher threshold fewer phrases.
+    # bigram_mod = models.phrases.Phraser(bigram)
+    # data_sample=[bigram_mod[doc] for doc in docs_words]
+
+    # build trigram:
+    # trigram = models.Phrases(bigram[docs_words], threshold=100)
+    # trigram_mod = models.phrases.Phraser(trigram)
+    # data_sample=[trigram_mod[bigram_mod[doc]] for doc in docs_words]
+
+    data_sample=docs_words
     dictionary = corpora.Dictionary(data_sample)
-    # print((list(dictionary.items())[:100]))
-    # 使用上面的词典，将转换文档列表（语料）变为bow
     doc_bow = [dictionary.doc2bow(doc) for doc in data_sample]
 
     # print(doc_bow[0])
@@ -25,10 +34,10 @@ def buildCorpus():
 
 
 def findBestParameters():
+    # only transcripts
     corpus, dictionary, data_sample = buildCorpus()
-    # passes=10
-    chunksizes = [256, 512, 1024, 2048, 4096, 8192]
-    passes_value = [10, 20]
+    chunksizes = [256, 512, 1024,2048, 4096, 8192 ]
+    passes_value = [10,20,30]
     max_topics = 15
     time_start = time()
     path = 'output files/txt files/parameters results.txt'
@@ -36,9 +45,9 @@ def findBestParameters():
         for chunksize in chunksizes:
             print('passes=', passes, ' chunksize=', chunksize)
 
-            x = []  # x轴
-            coherence_values = []  # 一致性
-            model_list = []  # 存储对应主题数量下的lda模型
+            x = []
+            coherence_values = []
+            model_list = []
 
             with open(path, 'a', encoding='utf-8') as file:
                 file.write('passes=' + str(passes))
@@ -55,31 +64,35 @@ def findBestParameters():
                 model_list.append(lda_model)
 
                 # calculate coherence
-                coherencemodel = models.CoherenceModel(model=lda_model, texts=data_sample, dictionary=dictionary,
+                coherence_model = models.CoherenceModel(model=lda_model, texts=data_sample, dictionary=dictionary,
                                                        coherence='c_v')
-                coherence = coherencemodel.get_coherence()
+                coherence = coherence_model.get_coherence()
                 print('     coherence: ', coherence)
                 coherence_values.append(coherence)
                 # if coherence is very high,then save model.
+
                 if coherence > 0.4:
                     lda_model.save('p{}_c{}_lda_model_numT{}.model'.format(passes, chunksize, str(topic + 1)))
 
                 # Store them into txt
                 numtopics_store = str('   number of topics = ' + str(topic + 1) + '\n')
-                ctime_store = str('       the costed time = ' + str(costed_time) + '\n')
                 coherence_store = str('       coherence= ' + str(coherence) + '\n')
+                ctime_store = str('       the costed time = ' + str(costed_time) + '\n')
+
                 with open(path, 'a', encoding='utf-8') as file:
                     file.write(numtopics_store)
-                    file.write(ctime_store)
                     file.write(coherence_store)
+                    file.write(ctime_store)
+
 
             print('coherence_values: ', coherence_values)
-            # 绘制一致性折线图
+
+            # line chart
             plt.plot(x, coherence_values)
             plt.title("Finding best number of topics:  coherence")
             plt.xlabel("Number of Topics ")
             plt.ylabel("coherence score")
-            plt.savefig('p{}_c{}_number_of_topic_with_coherence.jpg'.format(passes, chunksize))
+            plt.savefig('output files/0 line charts temp/p{}_c{}_number_of_topic_with_coherence.jpg'.format(passes, chunksize))
             plt.show()
 
     # record costed time on training model.
@@ -92,9 +105,9 @@ def findBestParameters():
 # Make LDAvis
 def LDAvis():
     doc_bow, dictionary, data_sample = buildCorpus()
-    pathes = [ 'p10_c1024_lda_model_numT5.{}','p20_c1024_lda_model_numT5.{}']
+    pathes = [ '{}p10_c1024_lda_model_numT5.{}','{}p20_c1024_lda_model_numT5.{}']
     for path in pathes:
-        lda = models.LdaModel.load(path.format('model'))
+        lda = models.LdaModel.load(path.format('','model'))
         print('model load!')
-        # visulisation = ldaVis.prepare(lda, doc_bow, dictionary)
-        # pyLDAvis.save_html(visulisation, path.format('html'))
+        visulisation = ldaVis.prepare(lda, doc_bow, dictionary)
+        pyLDAvis.save_html(visulisation, path.format('output files/pyLDAvis visualisation/','html'))

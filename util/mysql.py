@@ -12,17 +12,14 @@ con = pymysql.connect(host='121.199.58.129',
 cur = con.cursor()
 
 
-# print('数据库链接成功')
-# 创建游标
-
 # Data Collection：
 def SelectVideoID():
     # query = "SELECT `video_id` from comments where new_comment is NULL"
     query = "SELECT `video_id` from videos"
     cur.execute(query)
-    # 读取数据
+
     videoId = cur.fetchall()
-    # 打印数据
+
     videoIds = []
     for items in videoId:
         for item in items:
@@ -32,17 +29,17 @@ def SelectVideoID():
     return videoIds
 
 
-# 选择 transcripts没有的video_id
+# select transcripts without video_id
 def SelectVideoIDforThanscripts():
     # print('try to select video id for transcripts')
-    # 执行sql语句
+
     query = "select video_id from videos where video_id not in (select video_id from transcripts) "
     # query = 'select video_id from comments where video_id not in (select video_id from transcripts) order by likes desc'
     cur.execute(query)
     con.commit()
-    # 读取数据
+
     videoId = cur.fetchall()
-    # 打印数据
+
     videoIds = []
     for items in videoId:
         for item in items:
@@ -51,7 +48,7 @@ def SelectVideoIDforThanscripts():
     return videoIds
 
 
-# 收集transcript
+# collect transcript
 def InsertTranscriptInf(videoId, transcription):
     # 执行sql语句
     query = 'insert into transcripts(`video_id`,`transcript`) values(%s,%s) '
@@ -61,10 +58,9 @@ def InsertTranscriptInf(videoId, transcription):
     # print(videoId + 'GB Video transcription collect!')
 
 
-# 选择 Comments 中没有的video_id
 def SelectVideoIDforComments():
     # print('try to select video id for transcripts')
-    # 执行sql语句
+
     query1 = 'create table tem_comments (select DISTINCT video_id from comments)'
     cur.execute(query1)
     con.commit()
@@ -74,9 +70,8 @@ def SelectVideoIDforComments():
     cur.execute(query2)
     con.commit()
     # print(len(videoIds))
-    # 读取数据
     videoId = cur.fetchall()
-    # 打印数据
+
     for items in videoId:
         for item in items:
             videoIds.append(item)
@@ -90,7 +85,7 @@ def SelectVideoIDforComments():
     return videoIds
 
 
-# 将没有comments[like]>200的video_id 插入videos_without_comments中：
+
 def insertVideoswithoutComments(videoId):
     # print('start')
     query = 'insert into videos_without_comments (`video_id`) value(%s)'
@@ -100,9 +95,9 @@ def insertVideoswithoutComments(videoId):
     # print('insert!!')
 
 
-# 收集comments
+# insert comments
 def InsertComments(videoid, comment):
-    # 执行sql语句
+
     query = 'insert into comments(`video_id`,`comment`) values(%s, %s)'
     param = (videoid, comment)
     cur.execute(query, param)
@@ -110,7 +105,7 @@ def InsertComments(videoid, comment):
 
 
 # For Data Selection
-# 选择videos的tags并进行第一次粗浅的topic modelling：
+# Get tags
 def selectTags(videoId):
     query = 'select `tags` from videos where video_id = %s '
     param = (videoId)
@@ -123,7 +118,7 @@ def selectTags(videoId):
             return item
 
 
-# 插入tags于videos中
+# insert tags to videos
 def insertNewTags(videoId, newTags):
     query = 'update videos set `tags`= %s where video_id = %s '
     param = (newTags, videoId)
@@ -137,11 +132,10 @@ def selectTranscripts(videoId):
     query = 'SELECT `transcript` from videos where video_id =%s'
     param = (videoId)
     cur.execute(query, param)
-    # 读取数据
     transcripts = cur.fetchall()
     # print(transcripts)
     con.commit()
-    # 打印数据
+
     videosContents = []
     # videosContents = ''
     for items in transcripts:
@@ -155,8 +149,7 @@ def selectTranscripts(videoId):
 
 # # insert cleaned comments：
 def updateCleanedCommentsToComments(videoId, id, comment):
-    # 执行sql语句
-    # print(videoId,id,comment)
+
     query = 'update comments set `comment` = %s where video_id= %s and id=%s'
     param = (comment, videoId, id)
     cur.execute(query, param)
@@ -178,10 +171,9 @@ def SelectVideos(videoId):
     query = 'SELECT `title`,`transcript` from videos where video_id =%s'
     param = (videoId)
     cur.execute(query, param)
-    # 读取数据
     videos = cur.fetchall()
     con.commit()
-    # 打印数据
+
     videosContents = []
     for items in videos:
         for item in items:
@@ -246,10 +238,9 @@ def SelectCommentswithID(video_id):
     query = 'SELECT `comment` from comments where video_id =%s'
     param = (video_id)
     cur.execute(query, param)
-    # 读取数据
     comments_all = cur.fetchall()
     con.commit()
-    # 打印数据
+
     comments = []
     for items in comments_all:
         for item in items:
@@ -260,10 +251,9 @@ def SelectCommentswithID(video_id):
     query = 'SELECT `id` from comments where video_id =%s'
     param = (video_id)
     cur.execute(query, param)
-    # 读取数据
     ids_all = cur.fetchall()
     con.commit()
-    # 打印数据
+
     id_list = []
     for items in ids_all:
         for id in items:
@@ -299,10 +289,9 @@ def insertTopicTranscript(videoId, topic,possibility):
 def SelectAllComments():
     query = 'SELECT `comment` from comments'
     cur.execute(query)
-    # 读取数据
     comments_all = cur.fetchall()
     con.commit()
-    # 打印数据
+
     comments = []
     for items in comments_all:
         for item in items:
@@ -312,10 +301,8 @@ def SelectAllComments():
     # print(len(comments),comments)
     query = 'SELECT `id` from comments'
     cur.execute(query)
-    # 读取数据
     ids_all = cur.fetchall()
     con.commit()
-    # 打印数据
     id_list = []
     for items in ids_all:
         for id in items:
@@ -350,7 +337,7 @@ def InsertCommentsSAResult(id, neg, neu, pos, compound, sentiment):
     con.commit()
 
 
-def InsertTranscriptsSAResult(videoId, neg, neu, pos, compound, sentiment):
+def InsertVideosSAResult(videoId, neg, neu, pos, compound, sentiment):
     query = 'update videos set neg= %s where  video_id=%s '
     param = (neg, videoId)
     cur.execute(query, param)
@@ -379,11 +366,10 @@ def InsertTranscriptsSAResult(videoId, neg, neu, pos, compound, sentiment):
 def selectActuralSentiment():
     query = 'SELECT `polarity` from comments where polarity is not null'
     cur.execute(query)
-    # 读取数据
     sentiments = cur.fetchall()
     # print(transcripts)
     con.commit()
-    # 打印数据
+
     actural = []
 
     # videosContents = ''
@@ -397,11 +383,10 @@ def selectActuralSentiment():
 def selectResultsSentiment():
     query = 'SELECT `sentiment` from comments where polarity is not null'
     cur.execute(query)
-    # 读取数据
     sentiments = cur.fetchall()
     # print(transcripts)
     con.commit()
-    # 打印数据
+
     vader_sentiment = []
 
     # videosContents = ''
@@ -418,15 +403,4 @@ def CloseAll():
     cur.close()
     con.close()
 
-
-# 要删的
-def InsertCommentsTestSA(id, polarity, subjectivity):
-    query = 'update comments set polarity= %s where id=%s'
-    param = (polarity, id)
-    cur.execute(query, param)
-    con.commit()
-    query = 'update comments set subjectivity= %s where id=%s'
-    param = (subjectivity, id)
-    cur.execute(query, param)
-    con.commit()
 

@@ -568,4 +568,192 @@ passes=20  chunksize =8192
        coherence= 0.35507262121594013
 total_time=10818.875858545303
 
-passes=40  chunksize =2014
+
+
+passes=10  chunksize =1024
+   number of topics = 16
+       coherence= 0.3505328327845575
+       the costed time = 97.13118052482605
+   number of topics = 17
+       coherence= 0.33852353067910584
+       the costed time = 101.1564347743988
+   number of topics = 18
+       coherence= 0.3528302432536905
+       the costed time = 100.64221048355103
+   number of topics = 19
+       coherence= 0.3450114850612945
+       the costed time = 104.71872854232788
+   number of topics = 20
+       coherence= 0.33247257060772484
+       the costed time = 103.34631562232971
+   number of topics = 21
+       coherence= 0.3432753302639828
+       the costed time = 106.10582971572876
+   number of topics = 22
+       coherence= 0.3043661977364068
+       the costed time = 112.50438737869263
+   number of topics = 23
+       coherence= 0.31869963443115695
+       the costed time = 110.27634525299072
+   number of topics = 24
+       coherence= 0.31051410554885356
+       the costed time = 110.57175350189209
+   number of topics = 25
+       coherence= 0.31551008223026794
+       the costed time = 113.21250581741333
+   number of topics = 26
+       coherence= 0.30131478953637214
+       the costed time = 115.54122114181519
+   number of topics = 27
+       coherence= 0.28987930467170636
+       the costed time = 114.88195371627808
+   number of topics = 28
+       coherence= 0.3300156294314707
+       the costed time = 118.04805707931519
+   number of topics = 29
+       coherence= 0.3022610958349392
+       the costed time = 116.84847521781921
+   number of topics = 30
+       coherence= 0.2987201440888086
+       the costed time = 121.1520323753357
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+passes=20  chunksize =512
+   number of topics = 3
+       coherence= 0.2608045670688986
+       the costed time = 143.88998675346375
+   number of topics = 4
+       coherence= 0.34763671532972706
+       the costed time = 143.38262462615967
+   number of topics = 5
+       coherence= 0.3055482718411503
+       the costed time = 141.35030269622803
+   number of topics = 6
+       coherence= 0.3374989978749243
+       the costed time = 150.29591464996338
+   number of topics = 7
+       coherence= 0.3270518271119115
+       the costed time = 142.97864174842834
+   number of topics = 8
+       coherence= 0.3306223111414194
+       the costed time = 144.99901938438416
+   number of topics = 9
+       coherence= 0.32579624789251305
+       the costed time = 177.6061782836914
+
+
+# build trigram:
+passes=20  chunksize =512
+   number of topics = 5
+       coherence= 0.38206339337391115
+       the costed time = 169.20646286010742
+   number of topics = 6
+       coherence= 0.35960677332712404
+       the costed time = 168.07352471351624
+   number of topics = 7
+       coherence= 0.3247611033490574
+       the costed time = 168.11889338493347
+   number of topics = 8
+       coherence= 0.3653165561292844
+       the costed time = 168.1235203742981
+   number of topics = 9
+       coherence= 0.33244180226145725
+       the costed time = 179.08917570114136
+   number of topics = 10
+       coherence= 0.35526567393190006
+       the costed time = 182.43277716636658
+   number of topics = 11
+       coherence= 0.3038231461832652
+       the costed time = 189.32967329025269
+   number of topics = 12
+       coherence= 0.3163302675324568
+       the costed time = 189.52060794830322
+   number of topics = 13
+       coherence= 0.3046792202051511
+       the costed time = 192.62745809555054
+   number of topics = 14
+       coherence= 0.323598879799253
+       the costed time = 197.62605118751526
+   number of topics = 15
+       coherence= 0.31779683643460227
+       the costed time = 227.27607011795044
+
+
+ # build bigrams：
+
+passes=20  chunksize =1024
+   number of topics = 6
+       coherence= 0.39905030937888647
+       the costed time = 166.46646571159363
+   number of topics = 7
+       coherence= 0.33868781140631804
+       the costed time = 172.1495053768158
+   number of topics = 8
+       coherence= 0.3511933361209707
+       the costed time = 232.7764720916748
+   number of topics = 9
+       coherence= 0.3522604105201538
+       the costed time = 178.54192209243774
+   number of topics = 10
+       coherence= 0.35610532590127664
+       the costed time = 177.18580150604248
+passes=10  chunksize =256
+   number of topics = 3
+       coherence= 0.2733281393866382
+       the costed time = 17.32251763343811
+   number of topics = 4
+       coherence= 0.2735943860373794
+       the costed time = 15.17109990119934
+   number of topics = 5
+       coherence= 0.27136498623951566
+       the costed time = 15.309791564941406
+   number of topics = 6
+       coherence= 0.29675529003065004
+       the costed time = 16.18140411376953
+   number of topics = 7
+       coherence= 0.2871403241252026
+       the costed time = 16.538267374038696
+   number of topics = 8
+       coherence= 0.28890964029873845
+       the costed time = 16.653444528579712
+   number of topics = 9
+       coherence= 0.28099632074517866
+       the costed time = 16.807854175567627
+   number of topics = 10
+       coherence= 0.2819366776909458
+       the costed time = 17.22928786277771
+   number of topics = 11
+       coherence= 0.29605288190273266
+       the costed time = 17.184556245803833
+   number of topics = 12
+       coherence= 0.3051740656844585
+       the costed time = 17.664018154144287
+   number of topics = 13
+       coherence= 0.29095501807604013
+       the costed time = 17.57534098625183
+   number of topics = 14
+       coherence= 0.2992142006241734
+       the costed time = 17.916587829589844
+   number of topics = 15
+       coherence= 0.31100386901767607
+       the costed time = 18.428963899612427
+passes=10  chunksize =512
+   number of topics = 3
+       coherence= 0.27680665581670477
+       the costed time = 15.9056875705719
+   number of topics = 4
+       coherence= 0.2664718603397456
+       the costed time = 15.007460594177246

@@ -39,17 +39,18 @@ def cleanSymbols(strToClean):
     return strToClean
 
 
-# clean comments of each video. save them into original palce
+# clean transcripts and comments of each video. save them into original place
 def dataCleaning():
-    # print('Start to clean Transcripts: ')
+    print('Start to clean Transcripts: ')
     videoIds = mysql.SelectVideoID()
-    # print('the number we need to clean: ', len(videoIds))
-    # for videoID in videoIds:
-    #     transcript = mysql.selectTranscripts(videoID)
-    #     transcript = cleanSymbols(transcript)
-    #     # print(transcript)
-    #     mysql.updateCleanedTranscripts(videoID, transcript)
-    # print(' All Transcripts Cleaned!')
+    print('the number we need to clean: ', len(videoIds))
+    for videoID in videoIds:
+        transcript = mysql.selectTranscripts(videoID)
+        transcript = cleanSymbols(transcript)
+        # print(transcript)
+        mysql.updateCleanedTranscripts(videoID, transcript)
+    print(' All Transcripts Cleaned!')
+
     print('Start to clean Comments: ')
     print('the number we need to clean: ', len(videoIds))
     for videoID in videoIds:

@@ -8,8 +8,7 @@ import json
 def GetTranscription(videoIds):
     fal = []
     temp = 0
-    # videoIds = videoIds[::-1]
-    # print(len(videoIds))
+
     for index, videoId in enumerate(videoIds):
         try:
             transcript = YouTubeTranscriptApi.get_transcript(videoId)
@@ -26,13 +25,13 @@ def GetTranscription(videoIds):
             temp = temp +1
             print(temp, '!!!!!!!!!!!!!!!!!!!!OK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         except:
-            #如果无法收集，则将video_id保存至fal中
+            #videos cannot collect
             fal.append(videoId)
             print(len(fal))
     # print(fal)
     return fal
 
-# transcript 收集
+# transcript collext
 def TranscriptionCollection():
     videoIds = mysql.SelectVideoIDforThanscripts()
     random.shuffle(videoIds)
@@ -45,5 +44,4 @@ def TranscriptionCollection():
         json.dump(fallsrecord, json_file)
     print(fallsrecord)
     print('transcript collect!')
-    print('transcript collect!')
-    print('transcript collect!')
+

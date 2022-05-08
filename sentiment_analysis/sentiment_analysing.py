@@ -2,7 +2,6 @@ import random
 from nltk.tokenize import sent_tokenize
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-# from textblob import TextBlob
 from util import mysql as mysql
 
 from sklearn.metrics import confusion_matrix
@@ -31,11 +30,12 @@ def sentimentAnalysis(tag):
             content=mysql.SelectVideos(videoId)
             contents.append(content)
 
-    for item in contents:
-        index = contents.index(item)
+    for index in range(len(contents)):
         id = id_list[index]
-        result = analyzer.polarity_scores(item)
-        sentence_c = sent_tokenize(item)
+        content=contents[index]
+
+        result = analyzer.polarity_scores(content)
+        sentence_c = sent_tokenize(content)
         num_sentence = num_sentence + len(sentence_c)
         # print(num_sentence)
         neg = str(result['neg'])
@@ -52,10 +52,12 @@ def sentimentAnalysis(tag):
         # print(compound)
         if tag=='comments':
             mysql.InsertCommentsSAResult(id, neg, neu, pos, compound, sentiment)
+            if temp%1000==1:
+                print(temp, 'collect!')
         if tag=='videos':
-            mysql.InsertTranscriptsSAResult(id, neg, neu, pos, compound, sentiment)
-        if temp%100==1:
-            print(temp, 'collect!')
+            mysql.InsertVideosSAResult(id, neg, neu, pos, compound, sentiment)
+            if temp%100==1:
+                print(temp, 'collect!')
         temp = temp + 1
     print('number of sentences:', num_sentence)
     print('all sentimnent collect!!!!!!!!!!')
@@ -101,7 +103,7 @@ def evaluationSentiment():
     path = 'output files/txt files/evaluation of sentiment analysis.txt'
     with open(path, 'a', encoding='utf-8') as file:
         file.write('confusion_matrix:')
-        file.write(confusion_m)
+        file.write(str(confusion_m))
         file.write('\n\n')
         file.write('accuracy: ' + str(accuracy) + '\n')
         file.write('precision_micro: ' + str(precision_micro) + '\nprecision_macro:' + str(
