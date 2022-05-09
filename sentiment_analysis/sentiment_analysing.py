@@ -20,14 +20,13 @@ def sentimentAnalysis(tag):
     if tag=='comments':
         print(tag,': start to analyse...')
         contents, id_list = mysql.SelectAllComments()
-        analyzer = SentimentIntensityAnalyzer()
 
 
     if tag=='videos':
         print(tag,': start to analyse...')
         id_list=mysql.SelectVideoID()
         for videoId in id_list:
-            content=mysql.SelectVideos(videoId)
+            content=mysql.selectTranscripts(videoId)
             contents.append(content)
 
     for index in range(len(contents)):

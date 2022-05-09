@@ -36,8 +36,9 @@ def buildCorpus():
 def findBestParameters():
     # only transcripts
     corpus, dictionary, data_sample = buildCorpus()
-    chunksizes = [256, 512, 1024,2048, 4096, 8192 ]
-    passes_value = [10,20,30]
+    # TODO
+    chunksizes = [512, 1024,2048, 4096, 8192,16384]
+    passes_value = [20,30]
     max_topics = 15
     time_start = time()
     path = 'output files/txt files/parameters results.txt'

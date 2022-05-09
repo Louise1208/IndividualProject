@@ -1,3 +1,4 @@
+NOT REMOVE ANY COMMENTS:!!!
 
 passes=10  chunksize =256
    number of topics = 3
@@ -757,3 +758,6 @@ passes=10  chunksize =512
    number of topics = 4
        coherence= 0.2664718603397456
        the costed time = 15.007460594177246
+
+
+!!!AS for original topic 0,1,2,3,too few items in them, rebuild it.

@@ -1,5 +1,6 @@
 import re
 import warnings
+
 warnings.filterwarnings("ignore")
 
 import numpy as np
@@ -20,28 +21,36 @@ if __name__ == '__main__':
     # nltk.download()
 
     # Do data Collection
-    # dcol.dataCollecting()
+    dcol.dataCollecting()
 
     # Do data_calssification
     # dc.dataClassificationWithTags()
 
     # Clean data:
-    # dcl.dataCleaning()
+    dcl.dataCleaning()
+
+    comments, id_list = mysql.SelectAllComments()
+    print(len(comments))
+    for index in range(len(comments)):
+        comment = comments[index]
+        id = id_list[index]
+        if len(comment.split()) < 30:
+            print(comment)
+            mysql.delCommentsLessThan30(id)
 
     # Do Data Pre-processing with nltk and find the best dataPreprocessing way:
-    # dp.dataPreprocessing()
+    dp.dataPreprocessing(1)
+    # dp.dataPreprocessing(2)
 
-    #Topic Modelling
+    # Topic Modelling
     # lda.findBestParameters()
     # lda.LDAvis()
     # bestLda.topics()
-    bestLda.findDocsTopics()
+    # bestLda.findDocsTopics()
 
     # Sentiment Analysis
-    # sa.sentimentAnalysis('videos')
-    # sa.sentimentAnalysis('comments')
+    sa.sentimentAnalysis('videos')
+    sa.sentimentAnalysis('comments')
     # sa.evaluationSentiment()
 
-
-
-
+    mysql.CloseAll()

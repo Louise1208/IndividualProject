@@ -4,23 +4,19 @@ import json
 
 # 选择合适的视频：
 def dataClassificationWithTags():
-    videoIds = mysql.SelectVideoID('all')
-    # videoIds=videoIds[0:10]
-    # 建立 tags ：number of tags 的字典：
-    # tagswithFrequency= [[j for j in range(2)] for i in range(len(videoIds))]
+    videoIds = mysql.SelectVideoID()
+
     tagswithFrequency = {'tags': 0}
-    # print(tagswithFrequency)
-    # temp=0
+
     for i in range(0, len(videoIds)):
         videoId = videoIds[i]
         # print(videoId)
         tag = mysql.selectTags(videoId)
         tag = tag.lower()
+        tags=[]
         if tag == '[none]':
             tags = []
-        if i < 4485:
-            tags = tag.split(' , ')
-        elif i >= 4485:
+        else:
             tags = tag.split('|')
 
         # print(tags)

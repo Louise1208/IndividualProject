@@ -4,15 +4,13 @@ import time
 import sys
 import json
 
-YOUTUBE_IN_LINK = 'https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=100&order=relevance&pageToken={pageToken}&videoId={videoId}&key={key}'
-YOUTUBE_LINK = 'https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=100&order=relevance&videoId={videoId}&key={key}'
-key = 'AIzaSyC36OpHwDuHGrx3UMW-Rr4MXn0e025hEhQ'
 
 
-# key='AIzaSyALKx5ModcdJn-WWzJOngzYdKJPrvdx9hg'# key from google api
-# key =''# the key from google api.
+def CommentExtract(videoId, count,key):
+    key=key
+    YOUTUBE_IN_LINK = 'https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=100&order=relevance&pageToken={pageToken}&videoId={videoId}&key={key}'
+    YOUTUBE_LINK = 'https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=100&order=relevance&videoId={videoId}&key={key}'
 
-def CommentExtract(videoId, count):
     page_info = requests.get(YOUTUBE_LINK.format(videoId=videoId, key=key))
 
     while page_info.status_code != 200:
@@ -35,12 +33,13 @@ def CommentExtract(videoId, count):
         page_info = page_info.json()
         for i in range(len(page_info['items'])):
             # classify comments, only remain comments with likes >=200
-            if page_info['items'][i]['snippet']['topLevelComment']['snippet']['likeCount'] >= 200:
+            if page_info['items'][i]['snippet']['topLevelComment']['snippet']['likeCount'] >= 50:
                 snippet = page_info['items'][i]['snippet']['topLevelComment']['snippet']
                 # print(snippet)
-                comments.append(snippet['textOriginal'])
-                # print(snippet['textOriginal'])
-                temp += 1
+                comment = snippet['textOriginal']
+                if len(comment.split()) >= 30:
+                    comments.append(comment)
+                    temp += 1
                 # print(comments)
                 # print(len(comments))
             if temp == count:
@@ -51,28 +50,38 @@ def CommentExtract(videoId, count):
 def CommentsCollection(videoIds):
     # videos cannot get
     falls = []
+    key1 = 'AIzaSyC36OpHwDuHGrx3UMW-Rr4MXn0e025hEhQ'
+    key2='AIzaSyALKx5ModcdJn-WWzJOngzYdKJPrvdx9hg'# key from google api
+    key3='AIzaSyDwfBBqbCKe58zlQzvUQYZB8oiXSV4lYkA'
+    keys=[key2,key1,key3]
 
+    # key =''# the key from google api.
     # count:the max number of comments for each video
     count = 500
-    for videoId in videoIds:
-        try:
-            comments = CommentExtract(videoId, count)
+    for i in range(3):
+        videoIds=videoIds[(i*1200):((i+1)*1200)]
+        key=keys[i]
 
-            if comments != "Comments disabled":
-                print(videoId, len(comments))
-                # print('collect! start try insert!')
-                if len(comments) == 0:
-                    # print('try to del')
-                    mysql.insertVideoswithoutComments(videoId)
-                else:
-                    for comment in comments:
-                        # print(comment)
-                        mysql.InsertComments(videoId, comment)
-                    # print(videoIds.index(videoId) ,' ', videoId, ' Collect!')
-        except Exception as e:
-            falls.append(videoId)
-            print(videoId, ' : ', e)
-            pass
-        continue
+        for videoId in videoIds:
+            try:
+                comments = CommentExtract(videoId, count,key)
+
+                if comments != "Comments disabled":
+                    print(videoId, len(comments))
+                    # print('collect! start try insert!')
+                    if len(comments) == 0:
+                        # print('try to del')
+                        mysql.insertVideoswithoutComments(videoId)
+                    else:
+                        for comment in comments:
+                            # print(comment)
+                            mysql.InsertComments(videoId, comment)
+                        # print(videoIds.index(videoId) ,' ', videoId, ' Collect!')
+            except Exception as e:
+                falls.append(videoId)
+                print(videoId, ' : ', e)
+                pass
+            continue
+
     with open(f'falls_comments.json', 'w', encoding='utf-8') as json_file:
         json.dump(falls, json_file)

@@ -47,22 +47,21 @@ def dataCleaning():
     for videoID in videoIds:
         transcript = mysql.selectTranscripts(videoID)
         transcript = cleanSymbols(transcript)
-        # print(transcript)
         mysql.updateCleanedTranscripts(videoID, transcript)
     print(' All Transcripts Cleaned!')
 
     print('Start to clean Comments: ')
-    print('the number we need to clean: ', len(videoIds))
-    for videoID in videoIds:
-        # print(videoIds.index(videoID))
-        comments, id_list = mysql.SelectCommentswithID(videoID)
-        for comment in comments:
-            index = comments.index(comment)
-            id = id_list[index]
-            print(id)
-            # print(comments)
-            comment = cleanURL(comment)
-            comment = cleanChannelName(comment)
-            comment = cleanSymbols(comment)
-            mysql.updateCleanedCommentsToComments(videoID, id, comment)
+    comments, id_list=mysql.SelectAllComments()
+    print('the number we need to clean: ', len(comments))
+
+    for index in range(len(comments)):
+        comment=comments[index]
+        id = id_list[index]
+
+        comment = cleanURL(comment)
+        comment = cleanChannelName(comment)
+        comment = cleanSymbols(comment)
+        mysql.updateCleanedCommentsToComments(id, comment)
+        if index %1000==1:
+            print(index)
     print(' All Comments Cleaned!')

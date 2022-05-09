@@ -2,11 +2,11 @@ import re
 
 import pymysql
 
-# 云服务器上mysql数据库连接
+# connect database
 con = pymysql.connect(host='121.199.58.129',
                       port=3306,
-                      user='userout',  # mysql的登录账号admin
-                      password='userout',  # mysql的登录密码pwd
+                      user='root',  # mysql的登录账号admin
+                      password='991208',  # mysql的登录密码pwd
                       db='youtube')  # mysql中要访问的数据表
 
 cur = con.cursor()
@@ -66,7 +66,7 @@ def SelectVideoIDforComments():
     con.commit()
     videoIds = []
 
-    query2 = "select video_id from videos where video_id not in (select video_id from tem_comments) and video_id not in (select video_id from videos_without_comments) "
+    query2 = "select video_id from videos where video_id not in (select video_id from tem_comments) and video_id not in (select video_id from videos_minecraft) and video_id not in (select video_id from videos_without_comments) "
     cur.execute(query2)
     con.commit()
     # print(len(videoIds))
@@ -143,15 +143,15 @@ def selectTranscripts(videoId):
             videosContents.append(item)
         # print(item)
     transcript = ','.join(videosContents)
-    # print(transcript)
+    # print(videoId,transcript)
     return transcript
 
 
 # # insert cleaned comments：
-def updateCleanedCommentsToComments(videoId, id, comment):
+def updateCleanedCommentsToComments(id, comment):
 
-    query = 'update comments set `comment` = %s where video_id= %s and id=%s'
-    param = (comment, videoId, id)
+    query = 'update comments set `comment` = %s where id=%s'
+    param = (comment, id)
     cur.execute(query, param)
     con.commit()
 
@@ -180,6 +180,7 @@ def SelectVideos(videoId):
             videosContents.append(item)
     # print(videosContents)
     videosContent = '.'.join(videosContents)
+    # print(videosContent)
     return videosContent
 
 
@@ -398,9 +399,24 @@ def selectResultsSentiment():
     return vader_sentiment
 
 
+
+def delCommentsLessThan30(id):
+    query = 'delete from comments where id=%s'
+    param=(id)
+    cur.execute(query,param)
+    con.commit()
+
+
+def delTranscriptsLessThan30(videoid):
+    query = 'delete from videos where video_id=%s'
+    param=(videoid)
+    cur.execute(query,param)
+    con.commit()
+
+
+
+
 # Close MySQL
 def CloseAll():
     cur.close()
     con.close()
-
-

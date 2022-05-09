@@ -7,8 +7,9 @@ from util import mysql
 
 def dataCollecting():
     # Collect transcripts：
-    for i in range(0, 2):
-        transcription_collection.TranscriptionCollection()
+    # todo
+    # for i in range(0, 2):
+    #     transcription_collection.TranscriptionCollection()
 
     # Collect comments：
     # for 3 p.m. /day

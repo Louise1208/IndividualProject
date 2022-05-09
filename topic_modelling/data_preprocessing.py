@@ -7,7 +7,7 @@ from nltk.stem import WordNetLemmatizer  # 词性还原
 from util import mysql as mysql
 from nltk import FreqDist
 import matplotlib.pyplot as plt
-
+from string import punctuation
 remainder = ' Solution 1: normal way \n Solution 2: Adding Stopwords Lists'
 
 
@@ -16,6 +16,12 @@ def stopWordsListConstruction():
     videos_all = mysql.selectWordToken()
     videos = ' '.join(videos_all)
     cutwords = word_tokenize(videos)
+    wordcount = {}
+    for word in cutwords:
+        wordcount[word] = wordcount.get(word, 0)+1
+    minimum_token=sorted(wordcount.items(), key=lambda x: x[1], reverse=True)[:-10]
+    print('the minimum token occurrence: ',minimum_token)
+
     words_frequncy = FreqDist(cutwords)
     most_fre_words = words_frequncy.most_common(30)
     t = ""
@@ -40,15 +46,15 @@ def stopWordsListConstruction():
 
 
 def nltkUsing(paragraph, solutionID):
-    # our stop word list
+    # todo:our stop word list
     stoplist = ['get', 'go', 'oh', 'like', 'one', 'right', 'okay', 'na', 'gon', 'yeah']
 
     paragraph = paragraph.lower()
-    # print('【去除标点符号结果：】')
-    paragraph = re.sub(r'([^\w\u4e00-\u9fff])+', ' ', paragraph)
-    paragraph = re.sub('_', ' ', paragraph)
-    # print(paragraph)
-    # 分词
+
+    # print('【remove punctuation：】')
+    for pun in punctuation:
+        paragraph = paragraph.replace(pun,'')
+
     cutwords = word_tokenize(paragraph)
     # print(cutwords)
     original_word = len(cutwords)
@@ -60,9 +66,6 @@ def nltkUsing(paragraph, solutionID):
     # print('\nremove stop words in our stoplist')
     if solutionID == 2:
         cutwords1 = [word for word in cutwords1 if word not in stoplist]
-
-        # print(words_pos[0])
-        # print(words_pos[0][1])
 
     # print('\nPart-of-speech restoration：')
     cutwords2 = []
@@ -82,10 +85,11 @@ def nltkUsing(paragraph, solutionID):
     return words_wc, original_word, new_word
 
 
-def dataPreprocessing():
-    print(remainder)
-    solutionID = input('input ID of Data Preprocessing Solution: ')
-    solutionID = int(solutionID)
+def dataPreprocessing(solutionID):
+    # todo
+    # print(remainder)
+    # solutionID = input('input ID of Data Preprocessing Solution: ')
+    # solutionID = int(solutionID)
     videoIds = mysql.SelectVideoID()
     print(len(videoIds))
     videos_all = []
