@@ -1,1 +1,2 @@
-num_sentence=56971
+num_sentence of videos  = 178125
+num_sentence of comments  = 153195

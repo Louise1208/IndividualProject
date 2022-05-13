@@ -5,19 +5,6 @@ confusion_matrix:
  [ 645 1466  898]
  [ 283  318 2745]]
 
-accuracy: 0.665735331470663
-
-precision_micro: 0.665735331470663
-precision_macro:0.6531073777807707
-precision_weighted: 0.6792074984060725
-
-recall_micro: 0.665735331470663
-recall_macro:0.6621078694564483
-recall_weighted: 0.665735331470663
-
-F1_micro: 0.665735331470663
-F1_macro:0.6447450102716455
-F1_weighted: 0.6593538452294642
 
               precision    recall  f1-score   support
 
@@ -30,4 +17,19 @@ F1_weighted: 0.6593538452294642
 weighted avg       0.68      0.67      0.66      7874
 
 
-sentiment analysis: remove comments with less than 10 words
+sentiment analysis: remove comments with less than 50 words
+
+
+confusion_matrix:[[1374   26  691]
+ [  21   17  137]
+ [ 169   19 5031]]
+
+              precision    recall  f1-score   support
+
+          -1       0.88      0.66      0.75      2091
+           0       0.27      0.10      0.14       175
+           1       0.86      0.96      0.91      5219
+
+    accuracy                           0.86      7485
+   macro avg       0.67      0.57      0.60      7485
+weighted avg       0.85      0.86      0.85      7485

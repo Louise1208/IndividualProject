@@ -760,4 +760,95 @@ passes=10  chunksize =512
        the costed time = 15.007460594177246
 
 
-!!!AS for original topic 0,1,2,3,too few items in them, rebuild it.
+!!!AS for original topic 0,1,2,3,too few items in them, rebuild it.passes=20  chunksize =32768
+passes=10  chunksize =168
+   number of topics = 5
+       coherence= 0.3298180477002306
+
+passes=10  chunksize =256
+   number of topics = 6
+       coherence= 0.44627669913081497
+   number of topics = 7
+       coherence= 0.479343010527939
+   number of topics = 8
+       coherence= 0.456405198598108
+   number of topics = 13
+       coherence= 0.4566774876154617
+   number of topics = 17
+       coherence= 0.4537867879866898
+   number of topics = 18
+       coherence= 0.4582552152942028
+   number of topics = 19
+       coherence= 0.4646466851638637
+   number of topics = 20
+       coherence= 0.47738002858538947
+
+passes=10  chunksize =512
+   number of topics = 5
+       coherence= 0.37582847837792777
+   number of topics = 6
+       coherence= 0.41499940266311547
+   number of topics = 7
+       coherence= 0.5051200249193201
+   number of topics = 8
+       coherence= 0.40551182031472555
+   number of topics = 9
+       coherence= 0.4362178123038492
+   number of topics = 10
+       coherence= 0.4418616174220862
+   number of topics = 11
+       coherence= 0.435932951989191
+   number of topics = 12
+       coherence= 0.43867688284136563
+   number of topics = 13
+       coherence= 0.4376712885416645
+   number of topics = 14
+       coherence= 0.4387844496676892
+   number of topics = 15
+       coherence= 0.43039717883544854
+   number of topics = 16
+       coherence= 0.4176404949826516
+   number of topics = 17
+       coherence= 0.443996975292709
+   number of topics = 18
+       coherence= 0.4490495608436141
+   number of topics = 19
+       coherence= 0.46489489883127993
+   number of topics = 20
+       coherence= 0.4713429212265174
+
+passes=10  chunksize =1024
+   number of topics = 6
+       coherence= 0.45671977242113626
+   number of topics = 7
+       coherence= 0.4410977200567112
+   number of topics = 8
+       coherence= 0.44701939161642346
+   number of topics = 9
+       coherence= 0.4608826593245824
+   number of topics = 10
+       coherence= 0.4407023808967754
+   number of topics = 19
+       coherence= 0.46853860727077573
+   number of topics = 20
+       coherence= 0.48285183652225083
+
+passes=10  chunksize =2048
+   number of topics = 6
+       coherence= 0.4458329280892232
+   number of topics = 14
+       coherence= 0.44331958935014587
+   number of topics = 18
+       coherence= 0.4482317450615553
+   number of topics = 19
+       coherence= 0.4434728235045734
+
+passes=10  chunksize =168
+passes=10  chunksize =168
+passes=10  chunksize =168
+   number of topics = 7
+       coherence= 0.45970877433504714
+   number of topics = 8
+       coherence= 0.4901621332571492
+passes=10  chunksize =168
+passes=10  chunksize =168

@@ -14,7 +14,7 @@ cur = con.cursor()
 
 # Data Collection：
 def SelectVideoID():
-    # query = "SELECT `video_id` from comments where new_comment is NULL"
+
     query = "SELECT `video_id` from videos"
     cur.execute(query)
 
@@ -66,7 +66,7 @@ def SelectVideoIDforComments():
     con.commit()
     videoIds = []
 
-    query2 = "select video_id from videos where video_id not in (select video_id from tem_comments) and video_id not in (select video_id from videos_minecraft) and video_id not in (select video_id from videos_without_comments) "
+    query2 = "select video_id from all_videos where video_id not in (select video_id from tem_comments) and video_id not in (select video_id from videos_without_comments) "
     cur.execute(query2)
     con.commit()
     # print(len(videoIds))
@@ -201,17 +201,17 @@ def insertNewTranscript(videoId, transcript_new, original_word, new_word):
 
 
 # 将comments的分词结果保存在new_comment中
-def insertNewComments(videoId, id, new_comment, original_word, new_word):
-    query = 'update comments set new_comment= %s where video_id = %s and id=%s'
-    param = (new_comment, videoId, id)
+def insertNewComments(id, new_comment, original_word, new_word):
+    query = 'update comments set new_comment= %s where  id=%s'
+    param = (new_comment, id)
     cur.execute(query, param)
     con.commit()
-    query = 'update comments set original_word= %s where video_id = %s and id=%s '
-    param = (original_word, videoId, id)
+    query = 'update comments set original_word= %s where  id=%s '
+    param = (original_word,id)
     cur.execute(query, param)
     con.commit()
-    query = 'update comments set new_word= %s where video_id = %s and id=%s'
-    param = (new_word, videoId, id)
+    query = 'update comments set new_word= %s where  id=%s'
+    param = (new_word, id)
     cur.execute(query, param)
     con.commit()
 
@@ -311,22 +311,7 @@ def SelectAllComments():
     return comments, id_list
 
 
-def InsertCommentsSAResult(id, neg, neu, pos, compound, sentiment):
-    query = 'update comments set neg= %s where  id=%s '
-    param = (neg, id)
-    cur.execute(query, param)
-    con.commit()
-
-    query = 'update comments set neu= %s where id=%s'
-    param = (neu, id)
-    cur.execute(query, param)
-    con.commit()
-
-    query = 'update comments set pos= %s where id=%s'
-    param = (pos, id)
-    cur.execute(query, param)
-    con.commit()
-
+def InsertCommentsSAResult(id, compound, sentiment):
     query = 'update comments set compound= %s where  id=%s'
     param = (compound, id)
     cur.execute(query, param)
@@ -338,22 +323,7 @@ def InsertCommentsSAResult(id, neg, neu, pos, compound, sentiment):
     con.commit()
 
 
-def InsertVideosSAResult(videoId, neg, neu, pos, compound, sentiment):
-    query = 'update videos set neg= %s where  video_id=%s '
-    param = (neg, videoId)
-    cur.execute(query, param)
-    con.commit()
-
-    query = 'update videos set neu= %s where video_id=%s'
-    param = (neu, videoId)
-    cur.execute(query, param)
-    con.commit()
-
-    query = 'update videos set pos= %s where video_id=%s'
-    param = (pos, videoId)
-    cur.execute(query, param)
-    con.commit()
-
+def InsertVideosSAResult(videoId, compound, sentiment):
     query = 'update videos set compound= %s where  video_id=%s'
     param = (compound, videoId)
     cur.execute(query, param)
@@ -368,16 +338,22 @@ def selectActuralSentiment():
     query = 'SELECT `polarity` from comments where polarity is not null'
     cur.execute(query)
     sentiments = cur.fetchall()
-    # print(transcripts)
     con.commit()
 
     actural = []
-
     # videosContents = ''
     for items in sentiments:
         for item in items:
             actural.append(item)
         # print(item)
+    query = 'SELECT `polarity` from videos where polarity is not null'
+    cur.execute(query)
+    sentiments = cur.fetchall()
+    for items in sentiments:
+        for item in items:
+            actural.append(item)
+
+    con.commit()
     return actural
 
 
@@ -390,12 +366,18 @@ def selectResultsSentiment():
 
     vader_sentiment = []
 
-    # videosContents = ''
     for items in sentiments:
         for item in items:
             vader_sentiment.append(item)
-        # print(item)
-    # print(transcript)
+
+    query = 'SELECT `sentiment` from videos where polarity is not null'
+    cur.execute(query)
+    sentiments = cur.fetchall()
+    con.commit()
+    for items in sentiments:
+        for item in items:
+            vader_sentiment.append(item)
+
     return vader_sentiment
 
 
@@ -420,3 +402,15 @@ def delTranscriptsLessThan30(videoid):
 def CloseAll():
     cur.close()
     con.close()
+
+def InsertCommentsTestSA(id, polarity):
+    query = 'update comments set polarity= %s where id=%s '
+    param = (polarity, id)
+    cur.execute(query, param)
+    con.commit()
+
+def InsertVideosTestSA(id, polarity):
+    query = 'update videos set polarity= %s where video_id=%s '
+    param = (polarity, id)
+    cur.execute(query, param)
+    con.commit()
