@@ -7,13 +7,10 @@ from util import mysql
 
 def dataCollecting():
     # Collect transcripts：
-    for i in range(0, 2):
-        transcription_collection.TranscriptionCollection()
+    transcription_collection.TranscriptionCollection()
 
     # Collect comments：
     # for 3 p.m. /day
-    videoIds = mysql.SelectVideoIDforComments()
-    print(' number of videos need to be collected: ', len(videoIds))
-    CD.CommentsCollection(videoIds)
+    CD.CommentsCollection()
 
-    mysql.CloseAll()
+

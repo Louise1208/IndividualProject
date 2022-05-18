@@ -2,6 +2,7 @@ import re
 import util.mysql as mysql
 
 
+
 # 清除description中的不必要的数据（URL/email/Twitter/Instagram/Facebook/Snapchat）
 # 清除URL（字母://）或者www
 def cleanURL(strToClean):
@@ -47,22 +48,38 @@ def dataCleaning():
     for videoID in videoIds:
         transcript = mysql.selectTranscripts(videoID)
         transcript = cleanSymbols(transcript)
-        # print(transcript)
         mysql.updateCleanedTranscripts(videoID, transcript)
+        if videoIds.index(videoID)%100==1:
+            print('    number of videos complete: ',videoIds.index(videoID)+1)
     print(' All Transcripts Cleaned!')
 
     print('Start to clean Comments: ')
-    print('the number we need to clean: ', len(videoIds))
-    for videoID in videoIds:
-        # print(videoIds.index(videoID))
-        comments, id_list = mysql.SelectCommentswithID(videoID)
-        for comment in comments:
-            index = comments.index(comment)
-            id = id_list[index]
-            print(id)
-            # print(comments)
-            comment = cleanURL(comment)
-            comment = cleanChannelName(comment)
-            comment = cleanSymbols(comment)
-            mysql.updateCleanedCommentsToComments(videoID, id, comment)
+    comments, id_list=mysql.SelectAllComments()
+    print('the number we need to clean: ', len(comments))
+
+    for index in range(len(comments)):
+        comment=comments[index]
+        id = id_list[index]
+
+        comment = cleanURL(comment)
+        comment = cleanChannelName(comment)
+        comment = cleanSymbols(comment)
+        mysql.updateCleanedCommentsToComments(id, comment)
+        if index %1000==1:
+            print('    number of comments complete: ',index+1)
     print(' All Comments Cleaned!')
+
+    # delete the comments not reach our requests
+    comments, id_list = mysql.SelectAllComments()
+    print(len(comments))
+    temp=0
+    for index in range(len(comments)):
+        comment = comments[index]
+        id = id_list[index]
+        if len(comment.split()) <50:
+            temp+=1
+            print('we have delete: ',temp
+                  )
+            mysql.delCommentsLessThan30(id)
+    print('final comments:',len(comments)- temp)
+

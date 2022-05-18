@@ -1,14 +1,13 @@
 import re
 
-import gensim
 from nltk import word_tokenize, pos_tag  # 分词、词性标注
 from nltk.corpus import stopwords  # 停用词
 from nltk.stem import WordNetLemmatizer  # 词性还原
 from util import mysql as mysql
 from nltk import FreqDist
 import matplotlib.pyplot as plt
+from string import punctuation
 
-remainder = ' Solution 1: normal way \n Solution 2: Adding Stopwords Lists'
 
 
 # stoplist construction
@@ -16,6 +15,20 @@ def stopWordsListConstruction():
     videos_all = mysql.selectWordToken()
     videos = ' '.join(videos_all)
     cutwords = word_tokenize(videos)
+    wordcount = {}
+    for word in cutwords:
+        wordcount[word] = wordcount.get(word, 0)+1
+    minimum_token=sorted(wordcount.items(), key=lambda x: x[1], reverse=True)
+
+    print('the minimum token occurrence: ',minimum_token)
+
+    path='output files/txt files/stop words which less than 3 occurrences.txt'
+    with open(path, 'w', encoding='utf-8') as file:
+        for item in minimum_token:
+            if item[1]<3:
+                file.write(item[0]+',')
+
+
     words_frequncy = FreqDist(cutwords)
     most_fre_words = words_frequncy.most_common(30)
     t = ""
@@ -34,35 +47,37 @@ def stopWordsListConstruction():
     plt.title("Most Frequent words in corpus")
     plt.xlabel("words")
     plt.ylabel("Count")
-    plt.savefig('Most Frequent words in corpus.jpg')
+    plt.savefig('output files/line charts/Most Frequent words in corpus.jpg')
     plt.show()
 
 
 
-def nltkUsing(paragraph, solutionID):
-    # our stop word list
-    stoplist = ['get', 'go', 'oh', 'like', 'one', 'right', 'okay', 'na', 'gon', 'yeah']
+def nltkUsing(paragraph):
+    stoplist = [ 'get', 'go', 'im', 'like', 'one', 'oh', 'right', 'thats', 'really', 'yeah']
+    lines= open('output files/txt files/stop words which less than 3 occurrences.txt','r',encoding='utf-8')
+    for line in lines:
+        list_minocc=eval(line)
+    stoplist.extend(list_minocc)
 
     paragraph = paragraph.lower()
-    # print('【去除标点符号结果：】')
-    paragraph = re.sub(r'([^\w\u4e00-\u9fff])+', ' ', paragraph)
-    paragraph = re.sub('_', ' ', paragraph)
-    # print(paragraph)
-    # 分词
+
+    # print('【remove punctuation：】')
+    for pun in punctuation:
+        paragraph = paragraph.replace(pun,'')
+
     cutwords = word_tokenize(paragraph)
+
     # print(cutwords)
     original_word = len(cutwords)
 
     # print('\nremove stop words in stoplist')
-    stops = set(stopwords.words("english"))
+    # keep not or no
+    stops =[stopword for stopword in stopwords.words('english') if stopword not in ['not', 'no']]
     cutwords1 = [word for word in cutwords if word not in stops]
 
     # print('\nremove stop words in our stoplist')
-    if solutionID == 2:
-        cutwords1 = [word for word in cutwords1 if word not in stoplist]
 
-        # print(words_pos[0])
-        # print(words_pos[0][1])
+    cutwords1 = [word for word in cutwords1 if word not in stoplist]
 
     # print('\nPart-of-speech restoration：')
     cutwords2 = []
@@ -83,27 +98,26 @@ def nltkUsing(paragraph, solutionID):
 
 
 def dataPreprocessing():
-    print(remainder)
-    solutionID = input('input ID of Data Preprocessing Solution: ')
-    solutionID = int(solutionID)
     videoIds = mysql.SelectVideoID()
     print(len(videoIds))
-    videos_all = []
     for i in range(len(videoIds)):
         videoId = videoIds[i]
         transcript = mysql.SelectVideos(videoId)
-        transcript_new, original_word, new_word = nltkUsing(transcript, solutionID)
-        videos_all.append(transcript_new)
+        transcript_new, original_word, new_word = nltkUsing(transcript)
+
         mysql.insertNewTranscript(videoId, transcript_new, original_word, new_word)
-        comments, id_list = mysql.SelectCommentswithID(videoId)
-        # print(videoId)
-        for index in range(len(comments)):
-            id = id_list[index]
-            comment=comments[index]
-            # print(id)
-            comment_new, original_word, new_word = nltkUsing(comment, solutionID)
-            mysql.insertNewComments(videoId, id, comment_new, original_word, new_word)
-            videos_all.append(comment_new)
-        print('We have achieving ', i + 1, ' videos.')
-    if solutionID == 1:
-        stopWordsListConstruction()
+
+        if i%100==1:
+            print('We have achieving ', i + 1, ' videos.')
+
+    comments, id_list = mysql.SelectAllComments()
+    print(len(comments))
+    for index in range(len(comments)):
+        id = id_list[index]
+        comment=comments[index]
+        # print(id)
+        comment_new, original_word, new_word = nltkUsing(comment)
+        mysql.insertNewComments(id, comment_new, original_word, new_word)
+        if index%1000==1:
+            print('We have achieving ', index + 1, ' comments.')
+

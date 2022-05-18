@@ -18,7 +18,7 @@ def GetTranscription(videoIds):
                 text = i['text']
                 # print(text)
                 transcripts = transcripts + text + ' '
-            if len(transcripts) > 5:
+            if len(transcripts.split()) > 30:
                 mysql.InsertTranscriptInf(videoId, transcripts)
                 # print(transcripts)
                 # transcription[index]=transcription
